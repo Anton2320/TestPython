@@ -17,35 +17,35 @@ class MyAppWindowController(MyAppWindow):
 	def removeobject(self):
 		pass
 
-class MyAppWindowController_Message ( MyAppWindowController ):
+class MyAppWindowController_StaticText ( MyAppWindowController ):
 	def createobject(self, objectname, objectlabel):
-		self.parent.m_scrolledWindow_Dialog.GetSizer().Add(
+		self.parent.GetSizer().Add(
 				wx.StaticText(
-					self.parent.m_scrolledWindow_Dialog, name=f"{objectname}", label=f"{objectlabel}"),
+					self.parent, name=f"{objectname}", label=f"{objectlabel}"),
 			    0, wx.ALL, 1)
-		self.parent.m_scrolledWindow_Dialog.GetSizer().Layout()
-		self.parent.Fit()
+		self.parent.GetSizer().Layout()
+		self.parent.GetParent().Fit()
 
 	def removeobject(self, objectname):
 		if self.parent.m_scrolledWindow_Dialog.GetChildren():
-			messagemarkedfordeletion = self.parent.m_scrolledWindow_Dialog.GetSizer().FindWindowByName(f"{objectname}").GetWindow()
+			messagemarkedfordeletion = self.parent.GetSizer().FindWindowByName(f"{objectname}").GetWindow()
 
+class MyAppWindowController_Message ( MyAppWindowController_StaticText ):
 	def loadmessages(self):
 		pass
 
 	def receivemesssage(self):
 		pass
 
-	def cleanparent(self):
-		while self.parent.m_scrolledWindow_Dialog.GetChildren():
-			parentsizer = self.parent.m_scrolledWindow_Dialog.GetSizer()
-			messagemarkedfordeletion = parentsizer.GetItem(0).GetWindow()
+	def cleanmessages(self):
+		while self.parent.GetChildren():
+			messagemarkedfordeletion = self.parent.GetSizer().GetItem(0).GetWindow()
 			messagemarkedfordeletion.Hide()
 			messagemarkedfordeletion.Destroy()
-			self.parent.m_scrolledWindow_Dialog.GetSizer().Layout()
-			self.parent.Fit()
+			self.parent.GetSizer().Layout()
+			self.parent.GetParent().Fit()
 
-class MyAppWindowController_Contact ( MyAppWindowController ):
+class MyAppWindowController_Contact ( MyAppWindowController_StaticText ):
 	pass
 
 		
@@ -53,14 +53,14 @@ if __name__ == '__main__':
 	app = wx.App() 
 	mainGUI = MyAppWindow(None) 
 	mainGUI.Show()
-	WTF1 = MyAppWindowController_Message(mainGUI)
-	WTF1.createobject("WTF", "WTF")
-	WTF2 = MyAppWindowController_Message(mainGUI)
-	WTF2.createobject("WTF2", "WTF2")
+	WTF1 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	WTF1.createobject("TSTV", "TSTV")
+	WTF2 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	WTF2.createobject("TSTV2", "TSTV2")
 	#WTF2.removeobject("WTF2")
-	WTF2.cleanparent()
-	WTF2 = MyAppWindowController_Message(mainGUI)
-	WTF2.createobject("WTF3", "WTF3")
+	WTF2.cleanmessages()
+	WTF2 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	WTF2.createobject("TSTV3", "TSTV3")
 
 
 
