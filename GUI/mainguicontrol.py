@@ -21,20 +21,26 @@ class MyAppWindowController_StaticText ( MyAppWindowController ):
 	def createobject(self, objectname, objectlabel):
 		self.parent.GetSizer().Add(
 				wx.StaticText(
-					self.parent, name=f"{objectname}", label=f"{objectlabel}"),
+					self.parent, name=f"m_staticText_{objectname}", label=f"{objectlabel}"),
 			    0, wx.ALL, 1)
 		self.parent.GetSizer().Layout()
 		self.parent.GetParent().Fit()
 
 	def removeobject(self, objectname):
-		if self.parent.m_scrolledWindow_Dialog.GetChildren():
-			messagemarkedfordeletion = self.parent.GetSizer().FindWindowByName(f"{objectname}").GetWindow()
+		if self.parent.GetChildren():
+			messagemarkedfordeletion = self.parent.FindWindowByName(f"m_staticText_{objectname}")
+			messagemarkedfordeletion.Hide()
+			messagemarkedfordeletion.Destroy()
 
 class MyAppWindowController_Message ( MyAppWindowController_StaticText ):
-	def loadmessages(self):
-		pass
+	def loadmessages(self, sender):
+		self.cleanmessages()
+		messages = messageloader.loadmessagesfromDB(sender);
+		for message in messages:
+			pass
+		return messages
 
-	def receivemesssage(self):
+	def updatemesssages(self):
 		pass
 
 	def cleanmessages(self):
@@ -46,21 +52,33 @@ class MyAppWindowController_Message ( MyAppWindowController_StaticText ):
 			self.parent.GetParent().Fit()
 
 class MyAppWindowController_Contact ( MyAppWindowController_StaticText ):
-	pass
+	def createobject(self, objectname, objectlabel):
+		newobject = wx.StaticText(self.parent, name=f"m_staticText_{objectname}", label=f"{objectlabel}")
+		self.parent.GetSizer().Add(newobject, 0, wx.ALL, 1)
+		self.parent.GetSizer().Layout()
+		self.parent.GetParent().Fit()
+		newobject.Bind( wx.EVT_LEFT_DOWN, self.onContactClick )
+
+	def onContactClick(self, event):
+		print("something clicked!")
 
 		
 if __name__ == '__main__': 
 	app = wx.App() 
 	mainGUI = MyAppWindow(None) 
 	mainGUI.Show()
-	WTF1 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
-	WTF1.createobject("TSTV", "TSTV")
-	WTF2 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
-	WTF2.createobject("TSTV2", "TSTV2")
-	#WTF2.removeobject("WTF2")
-	WTF2.cleanmessages()
-	WTF2 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
-	WTF2.createobject("TSTV3", "TSTV3")
+
+	TSTV1 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Contacts)
+	TSTV1.createobject("localhost", "localhost")	
+
+	TSTV1 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	TSTV1.createobject("TSTV", "TSTV")
+	TSTV2 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	TSTV2.createobject("TSTV2", "TSTV2")
+	TSTV2.cleanmessages()
+	TSTV3 = MyAppWindowController_Message(mainGUI.m_scrolledWindow_Dialog)
+	TSTV3.createobject("TSTV3", "TSTV3")
+	#TSTV3.removeobject("TSTV3")
 
 
 

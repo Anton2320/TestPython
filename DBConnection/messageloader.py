@@ -7,6 +7,9 @@ class MyDHTMessage:
         self.sender = sender
         self.time = time
 
+    def receivemessage(self):
+        pass
+
     def loadmessagefromDB(self, ID):
         with sqlite3.connect('..\Messages.sqlite') as sqliteconnection:
             cursor = sqliteconnection.cursor()
